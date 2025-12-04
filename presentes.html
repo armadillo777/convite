@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Presentes sugeridos</title>
+<style>
+body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
+img { width: 150px; cursor: pointer; margin: 10px; }
+#pixArea { margin-top: 20px; padding: 15px; border: 1px solid #ccc; display: none; }
+</style>
+</head>
+<body>
+
+<h2>Presentes sugeridos</h2>
+<p>Se desejar enviar um presente, clique em uma das opções abaixo:</p>
+
+<img src="presente1.jpg" onclick="escolher('Jogo de Panelas', 'CHAVEPIX1')" alt="Presente 1">
+<img src="presente2.jpg" onclick="escolher('Liquidificador', 'CHAVEPIX2')" alt="Presente 2">
+<img src="presente3.jpg" onclick="escolher('Ventilador', 'CHAVEPIX3')" alt="Presente 3">
+
+<div id="pixArea">
+<h3>Obrigado pelo carinho!</h3>
+<p><b>Presente escolhido:</b> <span id="presenteEscolhido"></span></p>
+<p><b>Chave PIX:</b></p>
+<pre id="pix"></pre>
+</div>
+
+<button onclick="window.close()">Concluir</button>
+
+<script>
+function escolher(nomePresente, pix) {
+
+    document.getElementById("presenteEscolhido").textContent = nomePresente;
+    document.getElementById("pix").textContent = pix;
+    document.getElementById("pixArea").style.display = "block";
+
+    // Envio ao WhatsApp
+    const numeroWhatsApp = "5599999999999";
+    const msg = `Presente escolhido pelo convidado: ${nomePresente}`;
+    const urlWhats = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(msg)}`;
+    window.open(urlWhats, "_blank");
+}
+</script>
+</body>
+</html>
