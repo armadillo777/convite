@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Convite de celebração de Maria e João</title>
+<style>
+body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
+label { display: block; margin-top: 10px; }
+button { margin-top: 20px; padding: 10px; font-size: 16px; }
+.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<h2>Convite de celebração de Maria e João</h2>
+
+<form id="form">
+
+<label>Nome completo:
+<input type="text" id="nome" required>
+</label>
+
+<label>Confirmará presença?
+<select id="presenca" required>
+<option value="">Selecione</option>
+<option value="sim">Sim</option>
+<option value="nao">Não</option>
+</select>
+</label>
+
+<div id="acompanhantesArea" class="hidden">
+<label>Quantos acompanhantes?
+<input type="number" id="qtdAcomp" min="0" value="0">
+</label>
+
+<label>Nomes dos acompanhantes (se houver)
+<textarea id="nomesAcomp"></textarea>
+</label>
+</div>
+
+<button type="submit">Enviar confirmação</button>
+
+</form>
+
+<script>
+document.getElementById("presenca").addEventListener("change", function() {
+    document.getElementById("acompanhantesArea").classList.toggle("hidden", this.value !== "sim");
+});
+
+document.getElementById("form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const nome = document.getElementById("nome").value;
+    const presenca = document.getElementById("presenca").value;
+    const qtdAcomp = document.getElementById("qtdAcomp").value;
+    const nomesAcomp = document.getElementById("nomesAcomp").value;
+
+    // Substitua pelo número desejado:
+    const numeroWhatsApp = "5599999999999";
+
+    const msg = 
+`Confirmação de Presença:
+Nome: ${nome}
+Presença: ${presenca}
+Acompanhantes: ${qtdAcomp}
+Nomes dos acompanhantes: ${nomesAcomp}`;
+
+    const urlWhats = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(msg)}`;
+    window.open(urlWhats, "_blank");
+
+    window.location.href = "presentes.html";
+});
+</script>
+
+</body>
+</html>
