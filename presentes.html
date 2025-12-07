@@ -2,21 +2,69 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Presentes sugeridos</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presentes Sugeridos</title>
 <style>
-body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
-img { width: 150px; cursor: pointer; margin: 10px; }
-#pixArea { margin-top: 20px; padding: 15px; border: 1px solid #ccc; display: none; }
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #faf7f5;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+.container {
+    background: white;
+    padding: 30px;
+    max-width: 600px;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+img {
+    width: 150px;
+    border-radius: 8px;
+    margin: 15px;
+    cursor: pointer;
+    transition: transform .2s;
+}
+img:hover {
+    transform: scale(1.05);
+}
+#pixArea {
+    display: none;
+    background: #fff7ef;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #e2c9b3;
+}
+button {
+    width: 100%;
+    padding: 15px;
+    background: #8b4d39;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    margin-top: 25px;
+    font-size: 16px;
+}
+button:hover {
+    background: #733f2f;
+}
 </style>
 </head>
 <body>
 
-<h2>Presentes sugeridos</h2>
-<p>Se desejar enviar um presente, clique em uma das opções abaixo:</p>
+<div class="container">
+<h2>Presentes Sugeridos</h2>
+<p>Se desejar nos presentear, escolha uma das opções abaixo:</p>
 
-<img src="presente1.jpg" onclick="escolher('Jogo de Panelas', 'CHAVEPIX1')" alt="Presente 1">
-<img src="presente2.jpg" onclick="escolher('Liquidificador', 'CHAVEPIX2')" alt="Presente 2">
-<img src="presente3.jpg" onclick="escolher('Ventilador', 'CHAVEPIX3')" alt="Presente 3">
+<!-- Coloque aqui as imagens geradas do DALL·E -->
+<img src="presente1.jpg" onclick="escolher('Jogo de Panelas', 'CHAVEPIX1')">
+<img src="presente2.jpg" onclick="escolher('Liquidificador', 'CHAVEPIX2')">
+<img src="presente3.jpg" onclick="escolher('Jogo de Talheres', 'CHAVEPIX3')">
 
 <div id="pixArea">
 <h3>Obrigado pelo carinho!</h3>
@@ -26,6 +74,7 @@ img { width: 150px; cursor: pointer; margin: 10px; }
 </div>
 
 <button onclick="window.close()">Concluir</button>
+</div>
 
 <script>
 function escolher(nomePresente, pix) {
@@ -34,12 +83,12 @@ function escolher(nomePresente, pix) {
     document.getElementById("pix").textContent = pix;
     document.getElementById("pixArea").style.display = "block";
 
-    // Envio ao WhatsApp
     const numeroWhatsApp = "+5511963624699";
     const msg = `Presente escolhido pelo convidado: ${nomePresente}`;
     const urlWhats = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(msg)}`;
     window.open(urlWhats, "_blank");
 }
 </script>
+
 </body>
 </html>
