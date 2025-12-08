@@ -2,114 +2,127 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Convite de celebração de Maria e João</title>
+<title>Convite de celebração de Carol e João</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #faf7f5;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-}
-.container {
-    background: white;
-    padding: 30px;
-    max-width: 500px;
-    width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-h2 {
-    text-align: center;
-    color: #8b4d39;
-}
-label { margin-top: 15px; display: block; }
-input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    margin-top: 5px;
-}
-button {
-    background: #8b4d39;
-    color: white;
-    border: none;
-    width: 100%;
-    padding: 14px;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 20px;
-}
-button:hover {
-    background: #733f2f;
-}
-.hidden { display: none; }
+    body {
+        font-family: Arial;
+        padding: 20px;
+        max-width: 600px;
+        margin: auto;
+    }
+    h1 { color: #444; }
+    .hidden { display: none; }
+    label { display: block; margin-top: 15px; }
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+    }
+    button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #4CAF50;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    #contador {
+        background: #eee;
+        padding: 10px;
+        margin-top: 20px;
+        font-weight: bold;
+    }
 </style>
 </head>
 <body>
 
-<div class="container">
-<h2>Convite de celebração<br>Maria & João</h2>
+<h1>Convite de celebração de Carol e João</h1>
+<p>Preencha suas informações abaixo:</p>
 
 <form id="form">
-<label>Nome completo:
-<input type="text" id="nome" required>
-</label>
+    <label>Seu nome completo:</label>
+    <input type="text" id="nome" required>
 
-<label>Confirmará presença?
-<select id="presenca" required>
-<option value="">Selecione</option>
-<option value="sim">Sim</option>
-<option value="nao">Não</option>
-</select>
-</label>
+    <label>Você estará presente?</label>
+    <select id="presenca" required>
+        <option value="">Selecione...</option>
+        <option value="Sim">Sim</option>
+        <option value="Não">Não</option>
+    </select>
 
-<div id="acompanhantesArea" class="hidden">
-<label>Quantos acompanhantes?
-<input type="number" id="qtdAcomp" min="0" value="0">
-</label>
+    <div id="acompanhantes-section" class="hidden">
+        <label>Terá acompanhantes?</label>
+        <select id="temAcompanhantes">
+            <option value="Não">Não</option>
+            <option value="Sim">Sim</option>
+        </select>
 
-<label>Nomes dos acompanhantes:
-<textarea id="nomesAcomp" rows="3"></textarea>
-</label>
-</div>
+        <div id="qtd-section" class="hidden">
+            <label>Quantos acompanhantes?</label>
+            <input type="number" id="qtd" min="1">
+        </div>
 
-<button type="submit">Enviar confirmação</button>
+        <div id="nomes-section" class="hidden">
+            <label>Nomes completos dos acompanhantes:</label>
+            <textarea id="nomesAcompanhantes"></textarea>
+        </div>
+    </div>
 
+    <button type="submit">Enviar confirmação</button>
 </form>
-</div>
+
+<div id="contador">Total confirmados: <span id="total-confirmados">0</span></div>
 
 <script>
-document.getElementById("presenca").addEventListener("change", function() {
-    document.getElementById("acompanhantesArea")
-        .classList.toggle("hidden", this.value !== "sim");
+// ---- LÓGICA DE EXIBIÇÃO ----
+document.getElementById("presenca").addEventListener("change", function () {
+    document.getElementById("acompanhantes-section").classList.toggle(
+        "hidden", this.value !== "Sim"
+    );
 });
+
+document.getElementById("temAcompanhantes").addEventListener("change", function () {
+    const show = this.value === "Sim";
+    document.getElementById("qtd-section").classList.toggle("hidden", !show);
+    document.getElementById("nomes-section").classList.toggle("hidden", !show);
+});
+
+// ---- CONTADOR LOCAL (pode ser substituído por Firebase) ----
+let totalConfirmados = localStorage.getItem("confirmados") ?
+    parseInt(localStorage.getItem("confirmados")) : 0;
+
+document.getElementById("total-confirmados").innerText = totalConfirmados;
+
+// ---- ENVIO PARA WHATSAPP ----
+const numeroWhatsApp = "55XXXXXXXXXXX"; // <<< COLOQUE AQUI O NÚMERO QUE RECEBERÁ
 
 document.getElementById("form").addEventListener("submit", function(e) {
     e.preventDefault();
 
     const nome = document.getElementById("nome").value;
     const presenca = document.getElementById("presenca").value;
-    const qtdAcomp = document.getElementById("qtdAcomp").value;
-    const nomesAcomp = document.getElementById("nomesAcomp").value;
+    const temAcompanhantes = document.getElementById("temAcompanhantes").value;
+    const qtd = document.getElementById("qtd").value || "0";
+    const nomes = document.getElementById("nomesAcompanhantes").value || "Nenhum";
 
-    const numeroWhatsApp = "+5511963624699";
+    let mensagem = `Confirmação de presença:\n\nNome: ${nome}\nPresença: ${presenca}`;
 
-    const msg =
-`Confirmação de Presença:
-Nome: ${nome}
-Presença: ${presenca}
-Acompanhantes: ${qtdAcomp}
-Nomes dos acompanhantes: ${nomesAcomp}`;
+    if (presenca === "Sim") {
+        mensagem += `\nAcompanhantes: ${temAcompanhantes}\nQuantidade: ${qtd}\nNomes: ${nomes}`;
+    }
 
-    const urlWhats = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(msg)}`;
-    window.open(urlWhats, "_blank");
+    // Atualizar contador
+    if (presenca === "Sim") {
+        totalConfirmados++;
+        localStorage.setItem("confirmados", totalConfirmados);
+        document.getElementById("total-confirmados").innerText = totalConfirmados;
+    }
 
-    window.location.href = "presentes.html";
+    const url = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensagem)}`;
+
+    window.open(url, "_blank");
 });
 </script>
 
