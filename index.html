@@ -5,35 +5,19 @@
 <title>Convite de celebração de Carol e João</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-    body {
-        font-family: Arial;
-        padding: 20px;
-        max-width: 600px;
-        margin: auto;
-    }
+    body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; }
     h1 { color: #444; }
     .hidden { display: none; }
     label { display: block; margin-top: 15px; }
     input, select, textarea {
-        width: 100%;
-        padding: 10px;
-        margin-top: 5px;
+        width: 100%; padding: 10px; margin-top: 5px;
     }
     button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background: #4CAF50;
-        border: none;
-        color: white;
-        cursor: pointer;
+        margin-top: 20px; padding: 10px 20px;
+        background: #4CAF50; border: none; color: white; cursor: pointer;
         font-size: 16px;
     }
-    #contador {
-        background: #eee;
-        padding: 10px;
-        margin-top: 20px;
-        font-weight: bold;
-    }
+    #contador { background: #eee; padding: 10px; margin-top: 20px; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -76,11 +60,9 @@
 <div id="contador">Total confirmados: <span id="total-confirmados">0</span></div>
 
 <script>
-// ---- LÓGICA DE EXIBIÇÃO ----
+// Mostrar/ocultar campos
 document.getElementById("presenca").addEventListener("change", function () {
-    document.getElementById("acompanhantes-section").classList.toggle(
-        "hidden", this.value !== "Sim"
-    );
+    document.getElementById("acompanhantes-section").classList.toggle("hidden", this.value !== "Sim");
 });
 
 document.getElementById("temAcompanhantes").addEventListener("change", function () {
@@ -89,15 +71,14 @@ document.getElementById("temAcompanhantes").addEventListener("change", function 
     document.getElementById("nomes-section").classList.toggle("hidden", !show);
 });
 
-// ---- CONTADOR LOCAL (pode ser substituído por Firebase) ----
-let totalConfirmados = localStorage.getItem("confirmados") ?
-    parseInt(localStorage.getItem("confirmados")) : 0;
+// Contador local
+let totalConfirmados = localStorage.getItem("confirmados")
+    ? parseInt(localStorage.getItem("confirmados"))
+    : 0;
 
 document.getElementById("total-confirmados").innerText = totalConfirmados;
 
-// ---- ENVIO PARA WHATSAPP ----
-const numeroWhatsApp = "5511963624699"; // <<< COLOQUE AQUI O NÚMERO QUE RECEBERÁ
-
+// Envio automático ao Apps Script
 document.getElementById("form").addEventListener("submit", function(e) {
     e.preventDefault();
 
@@ -107,22 +88,32 @@ document.getElementById("form").addEventListener("submit", function(e) {
     const qtd = document.getElementById("qtd").value || "0";
     const nomes = document.getElementById("nomesAcompanhantes").value || "Nenhum";
 
-    let mensagem = `Confirmação de presença:\n\nNome: ${nome}\nPresença: ${presenca}`;
-
-    if (presenca === "Sim") {
-        mensagem += `\nAcompanhantes: ${temAcompanhantes}\nQuantidade: ${qtd}\nNomes: ${nomes}`;
-    }
-
-    // Atualizar contador
+    // Atualiza contador
     if (presenca === "Sim") {
         totalConfirmados++;
         localStorage.setItem("confirmados", totalConfirmados);
         document.getElementById("total-confirmados").innerText = totalConfirmados;
     }
 
-    const url = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensagem)}`;
+    const payload = {
+        nome,
+        presenca,
+        acompanhantes: temAcompanhantes,
+        qtd,
+        nomes
+    };
 
-    window.open(url, "_blank");
+    // <<< SUBSTITUA AQUI PELA SUA URL DO APP SCRIPT >>>
+    const endpoint = "https://script.google.com/macros/s/AKfycbziRdxEMNzMmepVQoz_rkf7nDV_sVSHCtj7sE9qVIhZN5aElWOtkhSR_1ciSn7z0Lwl/exec";
+
+    fetch(endpoint, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" }
+    });
+
+    alert("Confirmação enviada com sucesso!");
+    document.getElementById("form").reset();
 });
 </script>
 
