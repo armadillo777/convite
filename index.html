@@ -111,7 +111,6 @@ document.getElementById("form").addEventListener("submit", function(e) {
         body: JSON.stringify(payload),
         headers: { "Content-Type": "application/json" }
     })
-
     .then(response => response.json())
     .then(data => {
         console.log('Resposta do servidor:', data);
