@@ -110,15 +110,10 @@ document.getElementById("form").addEventListener("submit", function(e) {
         method: "POST",
         body: JSON.stringify(payload),
         headers: { "Content-Type": "application/json" }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Resposta do servidor:', data);
-        alert("Confirmação enviada com sucesso!");
-    })
-    .catch(error => {
-        console.error('Erro ao enviar dados:', error);
-    })
+    });
+
+    alert("Confirmação enviada com sucesso!");
+    document.getElementById("form").reset();
 });
 </script>
 
